@@ -4,6 +4,7 @@ import './index.css';
 
 interface IProps {
   value?: string;
+  onClick: () => void;
 }
 
 interface IState {
@@ -19,18 +20,40 @@ class Square extends React.Component<IProps, IState> {
     return (
       <button
         className="square"
-        onClick={()=>this.setState({value: 'X'})}
+        onClick={()=>this.props.onClick()}
       >
-        {this.state.value}
+        {this.props.value}
       </button>
     );
-  }
+  };
 }
 
-class Board extends React.Component {
+interface IBoardProps {
+};
+
+interface IBoardState {
+  squares: string[];
+};
+
+class Board extends React.Component<IBoardProps, IBoardState> {
+  public state: IBoardState = {
+    squares: Array(9).fill(null)
+  };
+
+  handleClick(i: number) {
+    const squares = this.state.squares.slice();
+    squares[i] = 'X';
+    this.setState({squares: squares});
+  };
+
   renderSquare(i: number) {
-    return <Square value={i.toString()} />;
-  }
+    return (
+      <Square
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+      />
+    );
+  };
 
   render() {
     const status = 'Next player: X';
@@ -55,7 +78,7 @@ class Board extends React.Component {
         </div>
       </div>
     );
-  }
+  };
 }
 
 class Game extends React.Component {
