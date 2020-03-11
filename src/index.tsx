@@ -7,43 +7,36 @@ interface IProps {
   onClick: () => void;
 }
 
-interface IState {
-  value?: string;
-}
-
-class Square extends React.Component<IProps, IState> {
-  public state: IState = {
-    value: ''
-  };
-
-  render() {
-    return (
-      <button
-        className="square"
-        onClick={()=>this.props.onClick()}
-      >
-        {this.props.value}
-      </button>
-    );
-  };
-}
+const Square: React.SFC<IProps> = (props: IProps) => (
+  <button
+    className="square"
+    onClick={()=>props.onClick()}
+  >
+    {props.value}
+  </button>
+);
 
 interface IBoardProps {
 };
 
 interface IBoardState {
   squares: string[];
+  xIsNext: boolean;
 };
 
 class Board extends React.Component<IBoardProps, IBoardState> {
   public state: IBoardState = {
-    squares: Array(9).fill(null)
+    squares: Array(9).fill(null),
+    xIsNext: true
   };
 
   handleClick(i: number) {
     const squares = this.state.squares.slice();
-    squares[i] = 'X';
-    this.setState({squares: squares});
+    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    this.setState({
+      squares: squares,
+      xIsNext: !this.state.xIsNext
+    });
   };
 
   renderSquare(i: number) {
@@ -56,7 +49,7 @@ class Board extends React.Component<IBoardProps, IBoardState> {
   };
 
   render() {
-    const status = 'Next player: X';
+    const status = `Следующий ход: ${this.state.xIsNext ? 'X' : 'O'}`;
 
     return (
       <div>
