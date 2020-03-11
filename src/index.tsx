@@ -3,14 +3,25 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 interface IProps {
-  value?: number;
+  value?: string;
 }
 
-class Square extends React.Component<IProps> {
+interface IState {
+  value?: string;
+}
+
+class Square extends React.Component<IProps, IState> {
+  public state: IState = {
+    value: ''
+  };
+
   render() {
     return (
-      <button className="square">
-        {this.props.value}
+      <button
+        className="square"
+        onClick={()=>this.setState({value: 'X'})}
+      >
+        {this.state.value}
       </button>
     );
   }
@@ -18,7 +29,7 @@ class Square extends React.Component<IProps> {
 
 class Board extends React.Component {
   renderSquare(i: number) {
-    return <Square value={i} />;
+    return <Square value={i.toString()} />;
   }
 
   render() {
